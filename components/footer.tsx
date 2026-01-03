@@ -112,7 +112,7 @@ export default function Footer() {
         <div className="border-t border-slate-700/50 pt-8 flex flex-col md:flex-row items-center justify-between">
           <p className="text-gray-400 text-sm flex items-center gap-2">
             Made with <Heart size={16} className="text-red-500 fill-red-500" /> by
-            Raj Mahesh Padarthi © 2025
+            Raj Mahesh Padarthi © 2026
           </p>
 
           <div className="flex gap-4 mt-4 md:mt-0">
