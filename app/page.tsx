@@ -1,65 +1,173 @@
-import Image from "next/image";
+"use client"
 
-export default function Home() {
+import React from "react"
+
+import Hero from "@/components/hero"
+import Stats from "@/components/stats"
+import About from "@/components/about"
+import Skills from "@/components/skills"
+import Projects from "@/components/projects"
+import Certifications from "@/components/certifications"
+import Contact from "@/components/contact"
+import Footer from "@/components/footer"
+
+type Particle = {
+  x: number
+  y: number
+  vx: number
+  vy: number
+  opacity: number
+  animationDelay: string
+}
+
+export default function Portfolio() {
+  const PARTICLE_COUNT = 20
+
+  // ✅ Start EMPTY (important for hydration)
+  const [particles, setParticles] = React.useState<Particle[]>([])
+
+  // ✅ Generate particles ONLY on client after mount
+  React.useEffect(() => {
+    const initialParticles: Particle[] = Array.from(
+      { length: PARTICLE_COUNT },
+      () => ({
+        x: Math.random() * 100,
+        y: Math.random() * 100,
+        vx: (Math.random() - 0.5) * 0.1,
+        vy: (Math.random() - 0.5) * 0.1,
+        opacity: Math.random() * 0.5 + 0.3,
+        animationDelay: `${Math.random() * 5}s`,
+      })
+    )
+
+    setParticles(initialParticles)
+  }, [])
+
+  // ✅ Animate particles
+  React.useEffect(() => {
+    if (particles.length === 0) return
+
+    let frameId: number
+
+    const animate = () => {
+      setParticles(prev =>
+        prev.map(p => {
+          let x = p.x + p.vx
+          let y = p.y + p.vy
+          let vx = p.vx
+          let vy = p.vy
+
+          // Bounce off edges
+          if (x < 0 || x > 100) vx = -vx
+          if (y < 0 || y > 100) vy = -vy
+
+          x = Math.max(0, Math.min(100, x))
+          y = Math.max(0, Math.min(100, y))
+
+          return { ...p, x, y, vx, vy }
+        })
+      )
+
+      frameId = requestAnimationFrame(animate)
+    }
+
+    frameId = requestAnimationFrame(animate)
+    return () => cancelAnimationFrame(frameId)
+  }, [particles.length])
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="min-h-screen bg-slate-950 text-white overflow-hidden">
+      <div className="fixed inset-0 pointer-events-none">
+        {/* Animated grid background */}
+        <div className="absolute inset-0 opacity-20">
+          <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse">
+                <path
+                  d="M 50 0 L 0 0 0 50"
+                  fill="none"
+                  stroke="rgba(0, 255, 255, 0.1)"
+                  strokeWidth="1"
+                />
+              </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#grid)" />
+          </svg>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
+
+        {/* Animated flowing lines */}
+        <svg className="absolute inset-0 w-full h-full opacity-30" xmlns="http://www.w3.org/2000/svg">
+          <line
+            x1="0"
+            y1="0"
+            x2="100%"
+            y2="100%"
+            stroke="rgba(0, 255, 255, 0.2)"
+            strokeWidth="2"
+            className="animate-line-flow"
+          />
+          <line
+            x1="100%"
+            y1="0"
+            x2="0"
+            y2="100%"
+            stroke="rgba(168, 85, 247, 0.2)"
+            strokeWidth="2"
+            className="animate-line-flow-reverse"
+          />
+          <line
+            x1="50%"
+            y1="0"
+            x2="50%"
+            y2="100%"
+            stroke="rgba(0, 255, 255, 0.15)"
+            strokeWidth="1"
+            className="animate-line-flow"
+          />
+          <line
+            x1="0"
+            y1="50%"
+            x2="100%"
+            y2="50%"
+            stroke="rgba(168, 85, 247, 0.15)"
+            strokeWidth="1"
+            className="animate-line-flow-reverse"
+          />
+        </svg>
+
+        {/* Floating particles */}
+        <div className="absolute inset-0">
+          {particles.map((p, i) => (
+            <div
+              key={i}
+              className="absolute w-1 h-1 bg-cyan-400 rounded-full animate-particle"
+              style={{
+                left: `${p.x}%`,
+                top: `${p.y}%`,
+                opacity: p.opacity,
+                animationDelay: p.animationDelay,
+              }}
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+          ))}
         </div>
-      </main>
+      </div>
+
+      {/* Background blobs */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-20 left-1/3 w-96 h-96 bg-cyan-500/5 rounded-full blur-3xl animate-blob" />
+        <div className="absolute bottom-20 right-1/3 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl animate-blob-2" />
+      </div>
+
+      <div className="relative z-10">
+        <Hero />
+        <Stats />
+        <About />
+        <Skills />
+        <Projects />
+        <Certifications />
+        <Contact />
+        <Footer />
+      </div>
     </div>
-  );
+  )
 }
